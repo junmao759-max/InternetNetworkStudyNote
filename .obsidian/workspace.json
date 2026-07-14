@@ -13,15 +13,72 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络体系架构.md",
+                "file": "第一章计算机网络体系结构/SUM计算机网络体系架构.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "计算机网络体系架构"
+              "title": "SUM计算机网络体系架构"
+            }
+          },
+          {
+            "id": "4c39c25169de11be",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "第一章计算机网络体系结构/电路交换、报文交换与分组交换.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "电路交换、报文交换与分组交换"
+            }
+          },
+          {
+            "id": "9b2ddf255f3f61fa",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "第一章计算机网络体系结构/SUM计算机网络体系架构.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SUM计算机网络体系架构"
+            }
+          },
+          {
+            "id": "6db3a7eb412198a8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "第一章计算机网络体系结构/计算机网络的分类.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "计算机网络的分类"
+            }
+          },
+          {
+            "id": "5d85e0673d983a07",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "第一章计算机网络体系结构/计算机网络的性能指标.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "计算机网络的性能指标"
             }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -183,11 +240,15 @@
       "bases:新建数据库": false
     }
   },
-  "active": "b297d0f00faec3c7",
+  "active": "5d85e0673d983a07",
   "lastOpenFiles": [
+    "第一章计算机网络体系结构/SUM计算机网络体系架构.md",
+    "第一章计算机网络体系结构/电路交换、报文交换与分组交换.md",
+    "第一章计算机网络体系结构/计算机网络的性能指标.md",
+    "第一章计算机网络体系结构",
+    "第一章计算机网络体系结构/计算机网络的分类.md",
+    "第一章计算机网络体系结构/计算机网络概念与功能.md",
     "未命名.base",
-    "计算机网络体系架构.md",
-    "未命名 1.base",
-    "未命名.md"
+    "未命名 1.base"
   ]
 }
