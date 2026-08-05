@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2.2 速率、波特与带宽 — 计算机网络物理层</title>
+<style>
+  :root {
+    --bg: #0a0a1a;
+    --card-bg: #12122a;
+    --text: #e0e0f0;
+    --text-secondary: #a0a0c0;
+    --accent: #6c5ce7;
+    --accent2: #00d2ff;
+    --accent3: #ff6b9d;
+    --accent4: #ffd93d;
+    --border: #2a2a4a;
+    --gradient-1: linear-gradient(135deg, #6c5ce7, #00d2ff);
+    --gradient-2: linear-gradient(135deg, #ff6b9d, #ffd93d);
+    --gradient-3: linear-gradient(135deg, #00d2ff, #6c5ce7);
+    --shadow: 0 4px 30px rgba(108, 92, 231, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ========== 背景粒子动画 ========== */
+  #particles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ========== 主容器 ========== */
+  .container {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto; padding: 20px;
+  }
+
+  /* ========== 头部 ========== */
+  .hero {
+    text-align: center; padding: 60px 20px 40px;
+    position: relative;
+  }
+  .hero .chapter-badge {
+    display: inline-block; padding: 6px 18px;
+    background: var(--gradient-1); border-radius: 20px;
+    font-size: 14px; font-weight: 600; letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 3rem; font-weight: 800;
+    background: var(--gradient-1);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  .hero .subtitle {
+    font-size: 1.1rem; color: var(--text-secondary);
+    letter-spacing: 1px;
+  }
+  .hero .wave-divider {
+    margin-top: 30px; height: 4px;
+    background: var(--gradient-1); border-radius: 2px;
+    animation: waveGlow 2s ease-in-out infinite alternate;
+  }
+  @keyframes waveGlow {
+    0% { box-shadow: 0 0 10px rgba(108,92,231,0.3); }
+    100% { box-shadow: 0 0 30px rgba(108,92,231,0.8); }
+  }
+
+  /* ========== 通用卡片 ========== */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    margin: 24px 0;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 40px rgba(108, 92, 231, 0.25);
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--gradient-1);
+  }
+  .card h2 {
+    font-size: 1.6rem; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card h2 .icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  /* ========== 核心概念双栏 ========== */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin: 24px 0;
+  }
+  @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+  .concept-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .concept-card:hover { transform: translateY(-4px); }
+
+  .concept-card .badge {
+    display: inline-block; padding: 4px 14px; border-radius: 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .badge-baud { background: rgba(0,210,255,0.15); color: #00d2ff; }
+  .badge-bit  { background: rgba(255,107,157,0.15); color: #ff6b9d; }
+
+  .concept-card .big-number {
+    font-size: 3.5rem; font-weight: 900; letter-spacing: -1px;
+    line-height: 1;
+  }
+  .concept-card .big-number small {
+    font-size: 1.2rem; font-weight: 400; opacity: 0.6;
+  }
+  .concept-card .def {
+    margin-top: 12px; color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  /* ========== 换算关系动画区 ========== */
+  .formula-showcase {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; flex-wrap: wrap; padding: 30px 0;
+    font-size: 1.5rem; font-weight: 700;
+  }
+  .formula-box {
+    background: var(--card-bg); border: 2px solid var(--border);
+    border-radius: 16px; padding: 16px 28px;
+    position: relative; text-align: center;
+    transition: all 0.4s;
+  }
+  .formula-box.highlight {
+    border-color: var(--accent2);
+    box-shadow: 0 0 25px rgba(0,210,255,0.3);
+    animation: pulseBorder 2s infinite;
+  }
+  @keyframes pulseBorder {
+    0%,100% { box-shadow: 0 0 15px rgba(0,210,255,0.2); }
+    50% { box-shadow: 0 0 35px rgba(0,210,255,0.5); }
+  }
+  .formula-box .label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--text-secondary); margin-bottom: 6px;
+  }
+  .formula-box .value {
+    font-size: 2rem; font-weight: 900;
+    background: var(--gradient-1);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .operator {
+    font-size: 2rem; color: var(--accent4); font-weight: 300;
+  }
+
+  /* ========== K进制演示器 ========== */
+  .k-demo {
+    display: flex; gap: 30px; align-items: center; flex-wrap: wrap;
+    justify-content: center; padding: 20px 0;
+  }
+  .k-slider-group {
+    text-align: center;
+  }
+  .k-slider-group input[type="range"] {
+    width: 200px; accent-color: var(--accent2);
+  }
+  .k-value-display {
+    font-size: 3rem; font-weight: 900;
+    background: var(--gradient-1);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .waveform-viz {
+    display: flex; gap: 4px; align-items: flex-end;
+    height: 80px; padding: 0 10px;
+  }
+  .waveform-viz .bar {
+    width: 14px; border-radius: 3px 3px 0 0;
+    transition: all 0.3s;
+  }
+
+  /* ========== 带宽对比 ========== */
+  .bandwidth-compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin: 20px 0;
+  }
+  @media (max-width: 768px) { .bandwidth-compare { grid-template-columns: 1fr; } }
+
+  .bw-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px; text-align: center;
+  }
+  .bw-card .bw-icon {
+    font-size: 3rem; margin-bottom: 10px;
+  }
+  .bw-card h3 { margin-bottom: 8px; }
+  .bw-card .unit { font-size: 2rem; font-weight: 900; margin-bottom: 6px; }
+
+  /* ========== 定理区 ========== */
+  .theorem-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px; margin: 20px 0;
+    position: relative; overflow: hidden;
+  }
+  .theorem-card.nyquist { border-left: 4px solid #00d2ff; }
+  .theorem-card.shannon { border-left: 4px solid #ff6b9d; }
+
+  .theorem-card .theorem-title {
+    font-size: 1.4rem; font-weight: 700; margin-bottom: 16px;
+  }
+  .theorem-formula {
+    font-size: 1.3rem; font-weight: 700; text-align: center;
+    padding: 16px; margin: 16px 0;
+    background: rgba(108,92,231,0.08); border-radius: 12px;
+    letter-spacing: 1px;
+  }
+  .theorem-formula .math {
+    font-family: 'Courier New', monospace; font-size: 1.4rem;
+  }
+  .theorem-conclusions {
+    list-style: none; padding: 0;
+  }
+  .theorem-conclusions li {
+    padding: 8px 0 8px 28px; position: relative;
+    font-size: 0.95rem; color: var(--text-secondary);
+  }
+  .theorem-conclusions li::before {
+    content: '▸'; position: absolute; left: 6px;
+    color: var(--accent2); font-weight: 700;
+  }
+
+  /* ========== 对比表 ========== */
+  .compare-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    margin: 16px 0; border-radius: 12px; overflow: hidden;
+    font-size: 0.95rem;
+  }
+  .compare-table th {
+    background: var(--gradient-1); color: #fff;
+    padding: 14px 18px; text-align: center; font-weight: 700;
+  }
+  .compare-table td {
+    padding: 14px 18px; text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table tr:nth-child(even) td {
+    background: rgba(108,92,231,0.04);
+  }
+
+  /* ========== 场景卡片 ========== */
+  .scenario-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 768px) { .scenario-row { grid-template-columns: 1fr; } }
+
+  .scenario-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px; text-align: center;
+    transition: all 0.3s;
+  }
+  .scenario-card:hover { border-color: var(--accent2); }
+  .scenario-card .sc-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+  /* ========== 马路比喻可视化 ========== */
+  .highway-viz {
+    position: relative; height: 160px; margin: 20px 0;
+    background: rgba(0,0,0,0.3); border-radius: 16px;
+    overflow: hidden; display: flex; align-items: center;
+  }
+  .highway-lane {
+    flex: 1; height: 100%; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .car {
+    position: absolute; font-size: 2rem;
+    animation: driveLeft var(--speed, 3s) linear infinite;
+  }
+  @keyframes driveLeft {
+    0% { left: -60px; }
+    100% { left: calc(100% + 60px); }
+  }
+
+  /* ========== 页脚 ========== */
+  .footer {
+    text-align: center; padding: 40px 20px;
+    color: var(--text-secondary); font-size: 0.85rem;
+  }
+
+  /* ========== 交互Tab ========== */
+  .tab-nav {
+    display: flex; gap: 8px; margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 22px; border-radius: 25px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-secondary);
+    cursor: pointer; font-size: 14px; transition: all 0.3s;
+    font-family: inherit;
+  }
+  .tab-btn.active {
+    background: var(--gradient-1); border-color: transparent; color: #fff;
+    font-weight: 600;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ========== 动画信号波 ========== */
+  .signal-canvas-wrap {
+    text-align: center; margin: 16px 0;
+  }
+  canvas { border-radius: 12px; background: rgba(0,0,0,0.3); }
+
+  /* ========== 响应式 ========== */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2rem; }
+    .concept-card .big-number { font-size: 2.5rem; }
+    .formula-showcase { font-size: 1.1rem; }
+    .scenario-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景粒子 -->
+<canvas id="particles"></canvas>
+
+<div class="container">
+
+  <!-- ========== 头部 ========== -->
+  <section class="hero">
+    <div class="chapter-badge">计算机网络 · 第二章 物理层</div>
+    <h1>2.2 速率、波特与带宽</h1>
+    <p class="subtitle">码元速率 · 信息速率 · 奈奎斯特与香农定理</p>
+    <div class="wave-divider"></div>
+  </section>
+
+  <!-- ========== 第一部分：两个速率 ========== -->
+  <section class="card">
+    <h2>
+      <span class="icon" style="background:rgba(0,210,255,0.15);">⚡</span>
+      两个速率：波特率 vs 比特率
+    </h2>
+
+    <div class="two-col">
+      <!-- 码元速率 -->
+      <div class="concept-card" style="border-top: 3px solid #00d2ff;">
+        <div class="badge badge-baud">码元速率</div>
+        <div class="big-number" style="color:#00d2ff;">
+          波特率 Baud
+        </div>
+        <div class="def">
+          <strong>每秒传输的码元个数</strong><br>
+          只数波形数量，不管码元是几进制<br>
+          单位：<em>波特（Baud）</em>
+        </div>
+        <div style="margin-top:14px; font-size:0.9rem; color:var(--text-secondary);">
+          📊 比喻：高速公路上<strong style="color:#00d2ff;">汽车的数量</strong>
+        </div>
+      </div>
+
+      <!-- 信息速率 -->
+      <div class="concept-card" style="border-top: 3px solid #ff6b9d;">
+        <div class="badge badge-bit">信息传输速率</div>
+        <div class="big-number" style="color:#ff6b9d;">
+          比特率 b/s
+        </div>
+        <div class="def">
+          <strong>每秒传输的比特数量</strong><br>
+          描述实际传输的数据量<br>
+          单位：<em>比特/秒（b/s 或 bps）</em>
+        </div>
+        <div style="margin-top:14px; font-size:0.9rem; color:var(--text-secondary);">
+          📊 比喻：高速公路上<strong style="color:#ff6b9d;">乘客的总人数</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- 关键记忆 -->
+    <div style="background:rgba(255,217,61,0.06); border:1px solid rgba(255,217,61,0.2); border-radius:12px; padding:16px; margin-top:16px; text-align:center;">
+      <span style="color:var(--accent4); font-weight:700;">💡 核心区分</span>&nbsp;&nbsp;
+      波特率 <strong>≠</strong> 比特率 &nbsp;|&nbsp;
+      进制决定两者的<strong style="color:var(--accent2);">倍数关系</strong>
+    </div>
+  </section>
+
+  <!-- ========== 第二部分：换算公式 ========== -->
+  <section class="card">
+    <h2>
+      <span class="icon" style="background:rgba(255,107,157,0.15);">🔄</span>
+      换算关系：从波特到比特
+    </h2>
+
+    <!-- 核心公式 -->
+    <div class="formula-showcase">
+      <div class="formula-box">
+        <div class="label">单码元信息量</div>
+        <div class="value">n = log₂k</div>
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-top:6px;">
+          k = 码元进制数
+        </div>
+      </div>
+      <div class="operator">→</div>
+      <div class="formula-box highlight">
+        <div class="label">核心换算公式</div>
+        <div class="value">R<sub>b</sub> = R<sub>s</sub> × log₂k</div>
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-top:6px;">
+          比特率 = 波特率 × 每码元比特数
+        </div>
+      </div>
+    </div>
+
+    <!-- 交互式K进制演示 -->
+    <div style="text-align:center; margin-top:24px;">
+      <h3 style="margin-bottom:10px; color:var(--accent2);">🎮 交互演示：拖动改变码元进制</h3>
+      <div class="k-demo">
+        <div class="k-slider-group">
+          <div style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:4px;">k 进制</div>
+          <div class="k-value-display" id="kValueDisplay">2</div>
+          <input type="range" min="2" max="64" value="2" id="kSlider"
+                 style="width:200px; margin-top:8px;">
+          <div style="color:var(--text-secondary); font-size:0.85rem; margin-top:6px;">
+            每码元携带 <strong style="color:#00d2ff;" id="bitsPerSymbol">1</strong> bit
+          </div>
+        </div>
+        <div style="font-size:2rem; color:var(--accent4);">→</div>
+        <div style="text-align:center;">
+          <div style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:4px;">示例（波特率 = 1000 Baud）</div>
+          <div style="font-size:2.2rem; font-weight:900; color:#ff6b9d;" id="bitrateResult">
+            1000 b/s
+          </div>
+          <div style="color:var(--text-secondary); font-size:0.85rem; margin-top:4px;">
+            比特率 = 1000 × <span id="multiplierDisplay">1</span> = <strong id="finalResult">1000</strong> b/s
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 常见进制速查 -->
+    <div style="margin-top:20px;">
+      <h4 style="margin-bottom:10px; color:var(--text-secondary);">📋 常见进制速查表</h4>
+      <table class="compare-table">
+        <thead>
+          <tr><th>k 进制</th><th>每码元 bit 数</th><th>举例说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2 进制</td><td><strong>1 bit</strong></td><td>0 / 1 两个电平</td></tr>
+          <tr><td>4 进制</td><td><strong>2 bit</strong></td><td>00 / 01 / 10 / 11</td></tr>
+          <tr><td>8 进制</td><td><strong>3 bit</strong></td><td>8 种电平，每个码元编码 3bit</td></tr>
+          <tr><td>16 进制</td><td><strong>4 bit</strong></td><td>典型调制：16-QAM</td></tr>
+          <tr><td>64 进制</td><td><strong>6 bit</strong></td><td>典型调制：64-QAM</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========== 第三部分：带宽 ========== -->
+  <section class="card">
+    <h2>
+      <span class="icon" style="background:rgba(255,217,61,0.15);">📡</span>
+      带宽的两种含义
+    </h2>
+
+    <div class="bandwidth-compare">
+      <div class="bw-card">
+        <div class="bw-icon">〰️</div>
+        <h3>模拟系统 · 频率带宽</h3>
+        <div class="unit" style="color:#00d2ff;">Hz（赫兹）</div>
+        <p style="color:var(--text-secondary); font-size:0.9rem;">
+          最高频率 − 最低频率<br>
+          描述信道可传输的<strong style="color:#00d2ff;">频率范围</strong>
+        </p>
+        <div style="margin-top:12px; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; font-size:0.85rem;">
+          📻 例：人耳听力范围 20Hz ~ 20kHz<br>
+          带宽 = 20,000 − 20 = <strong style="color:#00d2ff;">19,980 Hz</strong>
+        </div>
+      </div>
+
+      <div class="bw-card">
+        <div class="bw-icon">💻</div>
+        <h3>计算机网络 · 数据带宽</h3>
+        <div class="unit" style="color:#ff6b9d;">b/s（比特每秒）</div>
+        <p style="color:var(--text-secondary); font-size:0.9rem;">
+          线路<strong style="color:#ff6b9d;">最高数据传输速率</strong><br>
+          描述信道的数据承载能力
+        </p>
+        <div style="margin-top:12px; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; font-size:0.85rem;">
+          🌐 例：百兆宽带带宽 = <strong style="color:#ff6b9d;">100 Mbps</strong><br>
+          即每秒最多传输 100M 比特数据
+        </div>
+      </div>
+    </div>
+
+    <!-- 管道比喻 -->
+    <div style="background:rgba(108,92,231,0.06); border:1px solid var(--border); border-radius:14px; padding:20px; margin-top:16px; text-align:center;">
+      <h4 style="margin-bottom:8px;">🔧 通俗比喻：水管 vs 水流</h4>
+      <div style="display:flex; align-items:center; justify-content:center; gap:30px; flex-wrap:wrap;">
+        <div>
+          <div style="font-size:3rem;">🔌</div>
+          <div style="font-size:0.9rem; color:var(--text-secondary);">Hz 带宽<br>≈ 水管口径（物理属性）</div>
+        </div>
+        <div style="font-size:2rem; color:var(--accent4);">→</div>
+        <div>
+          <div style="font-size:3rem;">💧</div>
+          <div style="font-size:0.9rem; color:var(--text-secondary);">b/s 带宽<br>≈ 实际水流量（传输能力）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 第四部分：奈奎斯特 vs 香农 ========== -->
+  <section class="card">
+    <h2>
+      <span class="icon" style="background:rgba(255,107,157,0.15);">📐</span>
+      信道的极限容量：奈奎斯特 vs 香农
+    </h2>
+
+    <p style="color:var(--text-secondary); margin-bottom:16px; text-align:center;">
+      无论是波特率还是比特率，信道能传输的速率终究是有上限的——这就是两个定理告诉我们的
+    </p>
+
+    <!-- 奈奎斯特 -->
+    <div class="theorem-card nyquist">
+      <div class="theorem-title" style="color:#00d2ff;">
+        🔹 奈奎斯特定理（Nyquist）— 无噪声的理想信道
+      </div>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">仅约束码元传输速率，不限制每个码元携带多少比特</p>
+
+      <div class="theorem-formula">
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px;">极限码元速率</div>
+        <span class="math" style="color:#00d2ff;">2W 波特</span>
+        <div style="margin-top:10px; font-size:0.85rem; color:var(--text-secondary);">→ 极限数据速率</div>
+        <span class="math" style="color:#00d2ff;">
+          C = 2W · log₂V &nbsp; b/s
+        </span>
+        <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:6px;">
+          W = 信道带宽(Hz) &nbsp;|&nbsp; V = 码元离散电平数量
+        </div>
+      </div>
+
+      <ul class="theorem-conclusions">
+        <li>任何信道码元传输速率都有上限，超上限 → <strong style="color:#ff6b9d;">严重码间串扰</strong></li>
+        <li>信道带宽 W 越大，传送码元的能力越强</li>
+        <li>不限制单个码元携带的比特数 → 可用<strong>多进制调制</strong>提升速率</li>
+        <li>提高速率思路：增加每码元比特数（如 2→4→16 进制）</li>
+      </ul>
+
+      <div style="margin-top:12px; padding:10px; background:rgba(0,210,255,0.06); border-radius:8px; font-size:0.85rem; text-align:center; color:var(--text-secondary);">
+        📌 适用：<strong style="color:#00d2ff;">无噪声理想信道</strong>，只考虑带宽约束
+      </div>
+    </div>
+
+    <!-- VS 分隔 -->
+    <div style="text-align:center; padding:10px 0;">
+      <span style="font-size:1.2rem; font-weight:800; color:var(--accent4);">⚡ VS ⚡</span>
+    </div>
+
+    <!-- 香农 -->
+    <div class="theorem-card shannon">
+      <div class="theorem-title" style="color:#ff6b9d;">
+        🔸 香农定理（Shannon）— 有噪声的实际信道
+      </div>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">计算噪声环境下无差错传输的极限数据速率</p>
+
+      <div class="theorem-formula">
+        <span class="math" style="color:#ff6b9d;">
+          C = W · log₂(1 + S/N) &nbsp; b/s
+        </span>
+        <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:6px;">
+          W = 信道带宽(Hz) &nbsp;|&nbsp; S = 信号平均功率 &nbsp;|&nbsp; N = 噪声平均功率
+        </div>
+        <div style="font-size:0.8rem; color:var(--text-secondary);">
+          S/N = 信噪比（计算时必须用<strong style="color:#ff6b9d;">比值形式</strong>，非 dB！）
+        </div>
+      </div>
+
+      <div style="background:rgba(255,107,157,0.06); border-radius:10px; padding:14px; margin:12px 0;">
+        <strong style="color:var(--accent4);">📐 信噪比两种表示：</strong><br>
+        <span style="font-size:0.9rem;">
+          &nbsp;① 无量纲比值：S/N（<span style="color:#ff6b9d;">香农公式必须用这个</span>）<br>
+          &nbsp;② 分贝(dB)：<code>10 · log₁₀(S/N)</code> &nbsp;例 S/N=1000 → 30 dB
+        </span>
+      </div>
+
+      <ul class="theorem-conclusions">
+        <li>带宽 W 越大、信噪比 S/N 越大 → 极限速率越高</li>
+        <li>固定带宽和信噪比时，信息传输速率上限固定</li>
+        <li>实际速率 &lt; 极限速率时，<strong style="color:#00d2ff;">一定存在</strong>无差错传输方案</li>
+        <li>香农算出的是<strong style="color:#ff6b9d;">信息传输速率上限</strong>，远低于奈奎斯特的码元速率上限</li>
+      </ul>
+
+      <div style="margin-top:12px; padding:10px; background:rgba(255,107,157,0.06); border-radius:8px; font-size:0.85rem; text-align:center; color:var(--text-secondary);">
+        📌 适用：<strong style="color:#ff6b9d;">有高斯噪声的实际信道</strong>，计算无差错传输的理论极限
+      </div>
+    </div>
+
+    <!-- 完整对比表 -->
+    <div style="margin-top:24px;">
+      <h3 style="margin-bottom:12px; text-align:center;">📊 奈奎斯特 vs 香农 — 完整对比</h3>
+      <div style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>对比项</th>
+              <th style="color:#00d2ff;">奈奎斯特定理</th>
+              <th style="color:#ff6b9d;">香农定理</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>使用前提</strong></td>
+              <td>无噪声理想信道</td>
+              <td>有高斯噪声的实际信道</td>
+            </tr>
+            <tr>
+              <td><strong>约束对象</strong></td>
+              <td>码元传输速率（波特率）</td>
+              <td>信息比特传输速率（比特率）</td>
+            </tr>
+            <tr>
+              <td><strong>考虑因素</strong></td>
+              <td>仅信道带宽 W</td>
+              <td>带宽 W + 信噪比 S/N</td>
+            </tr>
+            <tr>
+              <td><strong>核心公式</strong></td>
+              <td>C = 2W · log₂V</td>
+              <td>C = W · log₂(1 + S/N)</td>
+            </tr>
+            <tr>
+              <td><strong>参考价值</strong></td>
+              <td>理论上限，现实达不到</td>
+              <td>实际信道无差错传输上限</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 第五部分：提速思路 ========== -->
+  <section class="card">
+    <h2>
+      <span class="icon" style="background:rgba(0,210,255,0.15);">🚀</span>
+      如何提升网络传输速率？
+    </h2>
+
+    <div class="scenario-row">
+      <div class="scenario-card">
+        <div class="sc-icon">🎯</div>
+        <h4 style="color:#00d2ff;">奈奎斯特路线</h4>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:8px;">
+          <strong>多进制调制</strong><br>
+          让单个码元承载更多比特<br>
+          2→4→16→64 进制<br>
+          不改变码元速率，提升比特率
+        </p>
+      </div>
+      <div class="scenario-card">
+        <div class="sc-icon">📡</div>
+        <h4 style="color:#ff6b9d;">香农路线①</h4>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:8px;">
+          <strong>增大带宽 W</strong><br>
+          更宽的频率通道<br>
+          让更多频率分量同时传输<br>
+          本质：拓宽高速公路
+        </p>
+      </div>
+      <div class="scenario-card">
+        <div class="sc-icon">🔊</div>
+        <h4 style="color:#ff6b9d;">香农路线②</h4>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:8px;">
+          <strong>提高信噪比 S/N</strong><br>
+          增大信号功率 / 降低噪声<br>
+          让信号从噪声中更易区分<br>
+          本质：让道路更干净
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 第六部分：考点速记 ========== -->
+  <section class="card">
+    <h2>
+      <span class="icon" style="background:rgba(255,217,61,0.15);">⭐</span>
+      核心考点速记
+    </h2>
+
+    <div class="scenario-row">
+      <div class="scenario-card" style="border-left: 3px solid #00d2ff;">
+        <div style="font-size:2rem;">①</div>
+        <p style="font-size:0.95rem; margin-top:6px;">
+          波特率<strong>≠</strong>比特率<br>
+          <span style="color:var(--text-secondary);">进制决定倍数关系</span>
+        </p>
+      </div>
+      <div class="scenario-card" style="border-left: 3px solid #ff6b9d;">
+        <div style="font-size:2rem;">②</div>
+        <p style="font-size:0.95rem; margin-top:6px;">
+          带宽两种含义<br>
+          <span style="color:var(--text-secondary);">模拟Hz vs 数字b/s</span>
+        </p>
+      </div>
+      <div class="scenario-card" style="border-left: 3px solid #ffd93d;">
+        <div style="font-size:2rem;">③</div>
+        <p style="font-size:0.95rem; margin-top:6px;">
+          奈奎斯特 → 码元上限<br>
+          <span style="color:var(--text-secondary);">香农 → 信息上限</span>
+        </p>
+      </div>
+    </div>
+    <div class="scenario-row" style="margin-top:8px;">
+      <div class="scenario-card" style="border-left: 3px solid var(--accent2);">
+        <div style="font-size:2rem;">④</div>
+        <p style="font-size:0.95rem; margin-top:6px;">
+          香农公式代入 S/N<br>
+          <span style="color:var(--text-secondary);">必须用比值，非分贝！</span>
+        </p>
+      </div>
+      <div class="scenario-card" style="border-left: 3px solid #a29bfe;">
+        <div style="font-size:2rem;">⑤</div>
+        <p style="font-size:0.95rem; margin-top:6px;">
+          提速两条路<br>
+          <span style="color:var(--text-secondary);">多进制调制 / 扩带宽+提信噪比</span>
+        </p>
+      </div>
+      <div class="scenario-card" style="border-left: 3px solid #fd79a8;">
+        <div style="font-size:2rem;">⑥</div>
+        <p style="font-size:0.95rem; margin-top:6px;">
+          码间串扰<br>
+          <span style="color:var(--text-secondary);">超奈奎斯特上限 → 无法区分码元</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <div class="footer">
+    📖 计算机网络 · 第二章 物理层 · 2.2 速率波特与带宽<br>
+    可视化笔记 · 2026-07
+  </div>
+</div>
+
+<!-- ========== 脚本：粒子背景 + K进制交互 ========== -->
+<script>
+// ====== 粒子背景 ======
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [];
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 1.8 + 0.3,
+      alpha: Math.random() * 0.4 + 0.1
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach((p, i) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(108,92,231,${p.alpha})`;
+      ctx.fill();
+
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+
+      // 连线
+      for (let j = i+1; j < particles.length; j++) {
+        const dx = p.x - particles[j].x;
+        const dy = p.y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(108,92,231,${0.08 * (1 - dist/120)})`;
+          ctx.stroke();
+        }
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ====== K进制交互演示 ======
+(function() {
+  const slider = document.getElementById('kSlider');
+  const kDisplay = document.getElementById('kValueDisplay');
+  const bitsDisplay = document.getElementById('bitsPerSymbol');
+  const bitrateResult = document.getElementById('bitrateResult');
+  const multiplierDisplay = document.getElementById('multiplierDisplay');
+  const finalResult = document.getElementById('finalResult');
+
+  function update() {
+    const k = parseInt(slider.value);
+    const bits = Math.log2(k);
+    const bitsRounded = Math.round(bits * 100) / 100;
+    const baudRate = 1000;
+    const bitrate = baudRate * bits;
+
+    kDisplay.textContent = k;
+    bitsDisplay.textContent = Number.isInteger(bits) ? bits : bitsRounded.toFixed(2);
+    bitrateResult.textContent = (Number.isInteger(bitrate) ? bitrate : Math.round(bitrate)) + ' b/s';
+    multiplierDisplay.textContent = Number.isInteger(bits) ? bits : bitsRounded.toFixed(2);
+    finalResult.textContent = (Number.isInteger(bitrate) ? bitrate : Math.round(bitrate));
+
+    // 动态颜色：进制越高，比特率越偏暖色
+    const hue = 200 - (Math.log2(k) / Math.log2(64)) * 160;
+    bitrateResult.style.color = `hsl(${Math.max(0, hue)}, 80%, 65%)`;
+    kDisplay.style.background = `linear-gradient(135deg, #00d2ff, hsl(${Math.max(0, hue)}, 80%, 60%))`;
+    kDisplay.style.webkitBackgroundClip = 'text';
+    kDisplay.style.webkitTextFillColor = 'transparent';
+    kDisplay.style.backgroundClip = 'text';
+  }
+
+  slider.addEventListener('input', update);
+  update();
+})();
+</script>
+
+</body>
+</html>

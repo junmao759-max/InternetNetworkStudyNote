@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2.2 传输介质 — 计算机网络物理层</title>
+<style>
+  :root {
+    --bg: #0a0a1a; --card-bg: #12122a; --text: #e0e0f0;
+    --text-secondary: #a0a0c0; --border: #2a2a4a;
+    --accent: #6c5ce7; --cyan: #00d2ff; --pink: #ff6b9d;
+    --yellow: #ffd93d; --green: #00cec9; --orange: #fdcb6e;
+    --gradient-1: linear-gradient(135deg, #6c5ce7, #00d2ff);
+    --gradient-2: linear-gradient(135deg, #ff6b9d, #ffd93d);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.7; overflow-x:hidden;
+  }
+  #particles {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    pointer-events:none; z-index:0;
+  }
+  .container { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:20px; }
+
+  .hero { text-align:center; padding:60px 20px 40px; }
+  .hero .badge {
+    display:inline-block; padding:6px 18px; background:var(--gradient-1);
+    border-radius:20px; font-size:14px; font-weight:600; letter-spacing:2px; margin-bottom:16px;
+  }
+  .hero h1 { font-size:3rem; font-weight:800; background:var(--gradient-1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:12px; }
+  .hero .sub { font-size:1.1rem; color:var(--text-secondary); letter-spacing:1px; }
+  .hero .divider { margin-top:30px; height:4px; background:var(--gradient-1); border-radius:2px; animation:glow 2s ease-in-out infinite alternate; }
+  @keyframes glow { 0%{box-shadow:0 0 10px rgba(108,92,231,0.3);} 100%{box-shadow:0 0 30px rgba(108,92,231,0.8);} }
+
+  .card {
+    background:var(--card-bg); border:1px solid var(--border); border-radius:16px;
+    padding:30px; margin:24px 0; box-shadow:0 4px 30px rgba(108,92,231,0.1);
+    transition:transform 0.3s,box-shadow 0.3s; position:relative; overflow:hidden;
+  }
+  .card:hover { transform:translateY(-2px); box-shadow:0 8px 40px rgba(108,92,231,0.2); }
+  .card::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background:var(--gradient-1); }
+  .card h2 { font-size:1.5rem; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+  .card h2 .icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:20px 0; }
+  @media(max-width:768px){ .two-col{grid-template-columns:1fr;} }
+
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:16px 0; border-radius:12px; overflow:hidden; font-size:0.93rem; }
+  table th { background:var(--gradient-1); color:#fff; padding:12px 16px; text-align:center; font-weight:700; }
+  table td { padding:12px 16px; text-align:center; border-bottom:1px solid var(--border); }
+  table tr:nth-child(even) td { background:rgba(108,92,231,0.04); }
+
+  /* 介质卡片 */
+  .media-card {
+    background:var(--card-bg); border:1px solid var(--border); border-radius:16px;
+    padding:24px; margin:16px 0; transition:all 0.3s;
+    border-left:5px solid var(--cyan);
+  }
+  .media-card:hover { transform:translateX(4px); box-shadow:0 4px 25px rgba(0,210,255,0.15); }
+  .media-card.twisted { border-left-color:#00d2ff; }
+  .media-card.coaxial { border-left-color:#ff6b9d; }
+  .media-card.fiber { border-left-color:#6c5ce7; }
+  .media-card.wireless { border-left-color:#ffd93d; }
+  .media-card .m-header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .media-card .m-icon { font-size:2.2rem; }
+  .media-card .m-name { font-size:1.3rem; font-weight:700; }
+  .media-card .m-struct { font-size:0.85rem; color:var(--text-secondary); margin:8px 0; padding:8px 12px; background:rgba(0,0,0,0.2); border-radius:8px; }
+  .media-card .m-detail { font-size:0.9rem; color:var(--text-secondary); }
+
+  /* 子分类 */
+  .sub-media-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; }
+  @media(max-width:768px){ .sub-media-grid{grid-template-columns:1fr;} }
+  .sub-media {
+    background:rgba(0,0,0,0.2); border-radius:12px; padding:16px; text-align:center;
+    border:1px solid transparent; transition:all 0.3s;
+  }
+  .sub-media:hover { border-color:var(--border); }
+  .sub-media .sm-name { font-weight:700; font-size:1rem; margin-bottom:4px; }
+  .sub-media .sm-desc { font-size:0.82rem; color:var(--text-secondary); }
+
+  /* 光纤原理图 */
+  .fiber-diagram {
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin:16px 0; flex-wrap:wrap;
+  }
+  .fiber-layer {
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    text-align:center; font-size:0.8rem; font-weight:600;
+  }
+  .fiber-core {
+    width:70px; height:70px; background:rgba(255,217,61,0.25);
+    border:2px solid var(--yellow);
+  }
+  .fiber-cladding {
+    width:110px; height:110px; background:rgba(0,210,255,0.12);
+    border:2px solid var(--cyan);
+  }
+  .fiber-ray {
+    position:absolute; width:100%; height:2px;
+    background:linear-gradient(90deg,transparent,var(--yellow),transparent);
+  }
+
+  /* 无线分类卡 */
+  .wireless-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; margin:16px 0; }
+  .wl-card {
+    background:var(--card-bg); border:1px solid var(--border); border-radius:14px;
+    padding:20px; text-align:center; transition:all 0.3s;
+  }
+  .wl-card:hover { border-color:var(--yellow); transform:translateY(-3px); }
+  .wl-card .wl-icon { font-size:2.5rem; margin-bottom:8px; }
+  .wl-card .wl-name { font-weight:700; font-size:1.1rem; margin-bottom:4px; }
+  .wl-card .wl-desc { font-size:0.85rem; color:var(--text-secondary); }
+
+  /* 比较条 */
+  .compare-bar {
+    display:flex; align-items:center; gap:10px; margin:8px 0;
+    font-size:0.9rem;
+  }
+  .compare-bar .bar-label { min-width:70px; font-weight:600; }
+  .compare-bar .bar-track {
+    flex:1; height:22px; background:rgba(0,0,0,0.3); border-radius:11px;
+    overflow:hidden; position:relative;
+  }
+  .compare-bar .bar-fill {
+    height:100%; border-radius:11px; transition:width 1s;
+    display:flex; align-items:center; justify-content:flex-end; padding-right:10px;
+    font-size:0.8rem; font-weight:600;
+  }
+
+  .highlight-box {
+    background:rgba(255,217,61,0.06); border:1px solid rgba(255,217,61,0.2);
+    border-radius:12px; padding:16px; margin:16px 0; text-align:center;
+  }
+
+  .point-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin:12px 0; }
+  .point-item {
+    background:rgba(0,0,0,0.2); border-radius:10px; padding:14px 16px;
+    border-left:3px solid var(--accent); font-size:0.9rem;
+  }
+  .point-item .pt-num { color:var(--yellow); font-weight:700; margin-right:6px; }
+
+  .footer { text-align:center; padding:40px 20px; color:var(--text-secondary); font-size:0.85rem; }
+
+  @media(max-width:768px){ .hero h1{font-size:2rem;} }
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="container">
+
+<section class="hero">
+  <div class="badge">计算机网络 · 第二章 物理层</div>
+  <h1>2.2 传输介质</h1>
+  <p class="sub">导向介质（双绞线·同轴电缆·光纤）& 非导向介质（无线电·微波·卫星）</p>
+  <div class="divider"></div>
+</section>
+
+<!-- ====== 第一部分：两大类 ====== -->
+<section class="card">
+  <h2><span class="icon" style="background:rgba(0,210,255,0.15);">🌐</span>传输介质两大类</h2>
+  <div class="two-col">
+    <div style="text-align:center; padding:20px; background:rgba(0,210,255,0.04); border-radius:14px; border:1px solid var(--border);">
+      <div style="font-size:3rem;">🔌</div>
+      <h3 style="color:var(--cyan);">导向传输介质</h3>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">
+        电磁波沿<strong>固体介质</strong>传播<br>
+        双绞线 · 同轴电缆 · 光纤
+      </p>
+    </div>
+    <div style="text-align:center; padding:20px; background:rgba(255,217,61,0.04); border-radius:14px; border:1px solid var(--border);">
+      <div style="font-size:3rem;">📡</div>
+      <h3 style="color:var(--yellow);">非导向传输介质</h3>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">
+        <strong>自由空间</strong>传播（空气/海水/真空）<br>
+        无线电 · 微波 · 红外 · 激光 → 统称<strong style="color:var(--yellow);">无线传输</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 第二部分：双绞线 ====== -->
+<section class="card">
+  <h2><span class="icon" style="background:rgba(0,210,255,0.15);">🔌</span>导向介质 ①：双绞线（局域网最常用）</h2>
+  <div class="media-card twisted">
+    <div class="m-header">
+      <div class="m-icon">🪢</div>
+      <div class="m-name" style="color:#00d2ff;">双绞线</div>
+    </div>
+    <div class="m-struct">
+      结构：两根铜导线<strong style="color:var(--yellow);">绞合</strong> → 降低相邻导线电磁干扰
+    </div>
+    <div class="sub-media-grid">
+      <div class="sub-media">
+        <div class="sm-name" style="color:#00d2ff;">UTP 非屏蔽双绞线</div>
+        <div class="sm-desc">无金属屏蔽层<br>成本低，最常见</div>
+      </div>
+      <div class="sub-media">
+        <div class="sm-name" style="color:#ff6b9d;">STP 屏蔽双绞线</div>
+        <div class="sm-desc">外层金属屏蔽层<br>抗干扰更强，价格贵</div>
+      </div>
+    </div>
+    <div class="m-detail" style="margin-top:10px;">
+      📏 通信距离：几千米～数十千米 &nbsp;|&nbsp;
+      🔄 模拟传输→放大器 &nbsp;|&nbsp; 数字传输→中继器整形再生
+    </div>
+  </div>
+  <div class="highlight-box">
+    <span style="color:var(--yellow);">📌 考点</span>&nbsp;
+    绞合目的：<strong style="color:var(--cyan);">减少电磁干扰</strong>，不是增强信号
+  </div>
+</section>
+
+<!-- ====== 第三部分：同轴电缆 ====== -->
+<section class="card">
+  <h2><span class="icon" style="background:rgba(255,107,157,0.15);">🔌</span>导向介质 ②：同轴电缆</h2>
+  <div class="media-card coaxial">
+    <div class="m-header">
+      <div class="m-icon">🔄</div>
+      <div class="m-name" style="color:#ff6b9d;">同轴电缆</div>
+    </div>
+    <div class="m-struct">
+      结构：内导体 → 绝缘层 → 外导体屏蔽层 → 保护套（<strong>两层导体</strong>）
+    </div>
+    <div class="sub-media-grid">
+      <div class="sub-media">
+        <div class="sm-name" style="color:#ff6b9d;">50Ω 同轴电缆</div>
+        <div class="sm-desc">传送<strong>基带数字信号</strong><br>早期以太网使用</div>
+      </div>
+      <div class="sub-media">
+        <div class="sm-name" style="color:#fdcb6e;">75Ω 同轴电缆</div>
+        <div class="sm-desc">传送<strong>宽带模拟信号</strong><br>有线电视（CATV）</div>
+      </div>
+    </div>
+    <div class="m-detail" style="margin-top:10px;">
+      ✅ 外层屏蔽 → 抗干扰优于双绞线 &nbsp;|&nbsp;
+      📉 目前局域网基本被双绞线替代
+    </div>
+  </div>
+</section>
+
+<!-- ====== 第四部分：光纤 ====== -->
+<section class="card">
+  <h2><span class="icon" style="background:rgba(108,92,231,0.15);">💡</span>导向介质 ③：光纤（光导纤维）</h2>
+  <div class="media-card fiber">
+    <div class="m-header">
+      <div class="m-icon">🔦</div>
+      <div class="m-name" style="color:#6c5ce7;">光纤</div>
+    </div>
+
+    <!-- 原理图 -->
+    <div style="text-align:center; margin:16px 0;">
+      <div style="position:relative; display:inline-block;">
+        <div class="fiber-cladding" style="display:flex; align-items:center; justify-content:center;">
+          <div class="fiber-core" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <span style="color:var(--yellow);">纤芯</span>
+            <span style="font-size:0.7rem; color:var(--text-secondary);">高折射率</span>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:6px; font-size:0.8rem; color:var(--text-secondary);">
+          包层：低折射率 &nbsp;|&nbsp; 原理：<strong style="color:var(--yellow);">光的全反射</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-struct" style="text-align:center;">
+      有光 = <strong style="color:var(--green);">1</strong> &nbsp;|&nbsp; 无光 = <strong style="color:var(--pink);">0</strong>
+      &nbsp;·&nbsp; 光线从纤芯射向包层，入射角 &gt; 临界角 → 全反射持续向前传播
+    </div>
+
+    <div class="sub-media-grid">
+      <div class="sub-media">
+        <div class="sm-name" style="color:#ffd93d;">多模光纤</div>
+        <div class="sm-desc">多条不同角度光线同时传输<br>脉冲色散大、损耗高<br><strong>适合近距离</strong>，成本低</div>
+      </div>
+      <div class="sub-media">
+        <div class="sm-name" style="color:#00cec9;">单模光纤</div>
+        <div class="sm-desc">纤芯极细，只一条光线直线传播<br>无多重反射，衰减小<br><strong>适合远距离</strong>，成本更高</div>
+      </div>
+    </div>
+
+    <!-- 光纤优点 -->
+    <div style="margin-top:16px;">
+      <h4 style="color:var(--green); margin-bottom:8px;">🌟 光纤五大优点（高频考点）</h4>
+      <div class="point-grid">
+        <div class="point-item"><span class="pt-num">①</span>通信容量极大、带宽极高</div>
+        <div class="point-item"><span class="pt-num">②</span>传输损耗小，中继距离长，远距离经济</div>
+        <div class="point-item"><span class="pt-num">③</span>抗雷电、电磁干扰能力极强</div>
+        <div class="point-item"><span class="pt-num">④</span>无串音干扰，保密性好，不易窃听</div>
+        <div class="point-item"><span class="pt-num">⑤</span>体积小、重量轻</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 第五部分：三种有线介质对比 ====== -->
+<section class="card">
+  <h2><span class="icon" style="background:rgba(255,217,61,0.15);">📊</span>三种导向介质横评</h2>
+  <table>
+    <thead>
+      <tr><th>对比项</th><th style="color:#00d2ff;">双绞线</th><th style="color:#ff6b9d;">同轴电缆</th><th style="color:#6c5ce7;">光纤</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>信号类型</strong></td><td>数字/模拟</td><td>数字(50Ω)/模拟(75Ω)</td><td>光脉冲</td></tr>
+      <tr><td><strong>抗干扰</strong></td><td>一般</td><td>较好（屏蔽层）</td><td style="color:var(--green);"><strong>极强</strong></td></tr>
+      <tr><td><strong>带宽</strong></td><td>中</td><td>较高</td><td style="color:var(--green);"><strong>极高</strong></td></tr>
+      <tr><td><strong>距离</strong></td><td>几km~几十km</td><td>较长</td><td style="color:var(--green);"><strong>极远</strong></td></tr>
+      <tr><td><strong>成本</strong></td><td style="color:var(--green);"><strong>低</strong></td><td>中</td><td>高</td></tr>
+      <tr><td><strong>典型应用</strong></td><td>局域网</td><td>有线电视</td><td>骨干网/远距离</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ====== 第六部分：非导向（无线） ====== -->
+<section class="card">
+  <h2><span class="icon" style="background:rgba(255,217,61,0.15);">📡</span>非导向传输介质：无线传输</h2>
+
+  <div class="wireless-grid">
+    <!-- 无线电波 -->
+    <div class="wl-card">
+      <div class="wl-icon">📻</div>
+      <div class="wl-name" style="color:#ff6b9d;">无线电波</div>
+      <div class="wl-desc">
+        <strong style="color:var(--yellow);">向所有方向扩散</strong>（四散传播）<br>
+        穿透能力强，不需严格对准<br>
+        ✅ 组网便捷，大范围终端接入<br>
+        📱 手机、WLAN 无线网络
+      </div>
+    </div>
+    <!-- 微波 -->
+    <div class="wl-card">
+      <div class="wl-icon">🌊</div>
+      <div class="wl-name" style="color:#00d2ff;">微波通信</div>
+      <div class="wl-desc">
+        载波频率：<strong>2~40GHz</strong><br>
+        带宽大、信道容量高<br>
+        <strong style="color:var(--yellow);">沿直线视距传播</strong><br>
+        远距离需中继站接力
+      </div>
+    </div>
+    <!-- 卫星 -->
+    <div class="wl-card">
+      <div class="wl-icon">🛰️</div>
+      <div class="wl-name" style="color:#6c5ce7;">卫星通信</div>
+      <div class="wl-desc">
+        <strong>3颗</strong>间隔120°同步卫星覆盖全球<br>
+        ✅ 距离远、覆盖广、容量大<br>
+        ❌ <strong style="color:var(--pink);">端到端传播时延很长</strong><br>
+        ❌ 保密性较差
+      </div>
+    </div>
+    <!-- 红外/激光 -->
+    <div class="wl-card">
+      <div class="wl-icon">🔴</div>
+      <div class="wl-name" style="color:#fdcb6e;">红外线 & 激光</div>
+      <div class="wl-desc">
+        高度定向，视距传输<br>
+        ⚠️ 易受障碍物遮挡<br>
+        短距离遥控、光纤通信光源
+      </div>
+    </div>
+  </div>
+
+  <!-- 无线对比表 -->
+  <table>
+    <thead><tr><th>类型</th><th>传播方式</th><th>方向性</th><th>关键特点</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:#ff6b9d;">无线电波</strong></td>
+        <td>四散扩散</td><td>❌ 无方向</td>
+        <td>穿透强，组网便捷</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#00d2ff;">微波</strong></td>
+        <td>直线视距</td><td>✅ 强方向</td>
+        <td>带宽大，需中继接力</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#6c5ce7;">卫星</strong></td>
+        <td>同步卫星中继</td><td>—</td>
+        <td style="color:var(--pink);">时延大，覆盖全球</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#fdcb6e;">红外/激光</strong></td>
+        <td>直线视距</td><td>✅ 高度定向</td>
+        <td>易被遮挡，短距离</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <span style="color:var(--yellow);">🧠 关键区分</span>&nbsp;
+    无线电波：<strong style="color:#ff6b9d;">无方向、四散</strong> &nbsp;|&nbsp;
+    微波/红外/激光：<strong style="color:#00d2ff;">强方向、视距传播</strong>
+  </div>
+</section>
+
+<!-- ====== 第七部分：考点汇总 ====== -->
+<section class="card">
+  <h2><span class="icon" style="background:rgba(255,217,61,0.15);">⭐</span>考试易混考点汇总</h2>
+  <div class="point-grid">
+    <div class="point-item" style="border-left-color:#00d2ff;">
+      <span class="pt-num">①</span>双绞线绞合目的：<strong style="color:var(--cyan);">减少电磁干扰</strong>
+    </div>
+    <div class="point-item" style="border-left-color:#ffd93d;">
+      <span class="pt-num">②</span>光纤信号载体：光脉冲；核心原理：<strong style="color:var(--yellow);">全反射</strong>
+    </div>
+    <div class="point-item" style="border-left-color:#6c5ce7;">
+      <span class="pt-num">③</span>单模光纤 → <strong style="color:var(--accent);">远距离</strong>；多模光纤 → <strong>近距离</strong>
+    </div>
+    <div class="point-item" style="border-left-color:#ff6b9d;">
+      <span class="pt-num">④</span>同轴电缆：<strong>50Ω</strong>=基带数字；<strong>75Ω</strong>=宽带模拟（有线电视）
+    </div>
+    <div class="point-item" style="border-left-color:#ff6b9d;">
+      <span class="pt-num">⑤</span>无线电波：无方向、四散；微波/红外/激光：<strong>定向视距</strong>
+    </div>
+    <div class="point-item" style="border-left-color:#ff6b9d;">
+      <span class="pt-num">⑥</span>卫星通信显著短板：<strong style="color:var(--pink);">传播时延大</strong>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  📖 计算机网络 · 第二章 物理层 · 2.2 传输介质<br>可视化笔记 · 2026-07
+</div>
+</div>
+
+<script>
+(function(){
+  const c=document.getElementById('particles'),ctx=c.getContext('2d');
+  let w,h,ps=[];
+  function r(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
+  r();window.addEventListener('resize',r);
+  for(let i=0;i<60;i++)ps.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,rr:Math.random()*1.8+0.3,a:Math.random()*0.4+0.1});
+  function d(){
+    ctx.clearRect(0,0,w,h);
+    ps.forEach((p,i)=>{
+      ctx.beginPath();ctx.arc(p.x,p.y,p.rr,0,Math.PI*2);ctx.fillStyle=`rgba(108,92,231,${p.a})`;ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+      for(let j=i+1;j<ps.length;j++){const dx=p.x-ps[j].x,dy=p.y-ps[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(ps[j].x,ps[j].y);ctx.strokeStyle=`rgba(108,92,231,${0.08*(1-dist/120)})`;ctx.stroke();}}
+    });
+    requestAnimationFrame(d);
+  }
+  d();
+})();
+</script>
+</body>
+</html>
