@@ -1,6 +1,6 @@
 soluble solubility
 society sociological
-immunity 
+immunity
 detach detached detain detainee
 mockery
 accompaniment
