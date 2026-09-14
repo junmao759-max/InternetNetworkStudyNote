@@ -1,4 +1,267 @@
 {
-  "version": 1,
-  "tags": {}
+  "version": 2,
+  "tags": {
+    "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.3差错控制\\3.3.2纠错编码.md": {
+      "tags": [
+        "海明码🌟 重点看"
+      ],
+      "dir": false
+    }
+  },
+  "memoryTasks": [
+    {
+      "id": "memory-mtrftyrd-s12xym",
+      "type": "file",
+      "title": "3.1.1数据链路层所处的地位.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.1数据链路层的功能\\3.1.1数据链路层所处的地位.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      }
+    },
+    {
+      "id": "memory-mtsm2yss-ppixqn",
+      "type": "file",
+      "title": "3.1.2链路管理.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.1数据链路层的功能\\3.1.2链路管理.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtsm2yss-7yflga",
+      "type": "file",
+      "title": "3.1.3封装成帧与透明传输.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.1数据链路层的功能\\3.1.3封装成帧与透明传输.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtsn699r-d8251a",
+      "type": "file",
+      "title": "3.1.4流量控制.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.1数据链路层的功能\\3.1.4流量控制.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtsn699r-7w4su4",
+      "type": "file",
+      "title": "3.1.5差错控制.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.1数据链路层的功能\\3.1.5差错控制.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtstgpx0-471qr0",
+      "type": "file",
+      "title": "3.2.1字符计数法.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.2组帧\\3.2.1字符计数法.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtstgpx0-nw1jfz",
+      "type": "file",
+      "title": "3.2.2字节填充法.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.2组帧\\3.2.2字节填充法.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtstgpx0-byq0hb",
+      "type": "file",
+      "title": "3.2.3零比特填充法.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.2组帧\\3.2.3零比特填充法.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtstgpx0-u5cgap",
+      "type": "file",
+      "title": "3.2.4违规编码法.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.2组帧\\3.2.4违规编码法.md",
+      "content": "",
+      "createdDate": "2026-09-08",
+      "checks": {
+        "2026-09-08": true,
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-12": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtsuz7ew-esep4q",
+      "type": "file",
+      "title": "3.4.1流量控制与滑动窗口机制.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.4流量控制与可靠传输机制\\3.4.1流量控制与滑动窗口机制.md",
+      "content": "",
+      "createdDate": "2026-09-09",
+      "checks": {
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-11": true,
+        "2026-09-13": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtsuz7ew-hyhhm3",
+      "type": "file",
+      "title": "3.4.2可靠传输机制.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.4流量控制与可靠传输机制\\3.4.2可靠传输机制.md",
+      "content": "",
+      "createdDate": "2026-09-09",
+      "checks": {
+        "2026-09-09": true,
+        "2026-09-10": true,
+        "2026-09-11": true,
+        "2026-09-13": true
+      }
+    },
+    {
+      "id": "memory-mtvggear-e3oaij",
+      "type": "file",
+      "title": "3.5.1信道划分介质访问控制.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.5介质访问控制\\3.5.1信道划分介质访问控制.md",
+      "content": "",
+      "createdDate": "2026-09-10",
+      "checks": {
+        "2026-09-10": true,
+        "2026-09-11": true,
+        "2026-09-12": true,
+        "2026-09-14": true
+      },
+      "reviewResults": {
+        "2026-09-10": "mastered"
+      }
+    },
+    {
+      "id": "memory-mtvggear-lfqn9y",
+      "type": "file",
+      "title": "3.5.2随机访问介质访问控制.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.5介质访问控制\\3.5.2随机访问介质访问控制.md",
+      "content": "",
+      "createdDate": "2026-09-10",
+      "checks": {
+        "2026-09-10": true,
+        "2026-09-11": true,
+        "2026-09-12": true,
+        "2026-09-14": true
+      }
+    },
+    {
+      "id": "memory-mtvggear-cvb4zc",
+      "type": "file",
+      "title": "3.5.2ps 一些注意事项.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.5介质访问控制\\3.5.2ps 一些注意事项.md",
+      "content": "",
+      "createdDate": "2026-09-10",
+      "checks": {
+        "2026-09-10": true,
+        "2026-09-11": true,
+        "2026-09-12": true,
+        "2026-09-14": true
+      }
+    },
+    {
+      "id": "memory-mtvmvg1h-jqyfz2",
+      "type": "file",
+      "title": "3.3.1检错编码.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.3差错控制\\3.3.1检错编码.md",
+      "content": "",
+      "createdDate": "2026-09-10",
+      "checks": {
+        "2026-09-10": true,
+        "2026-09-11": true,
+        "2026-09-12": true,
+        "2026-09-14": true
+      }
+    },
+    {
+      "id": "memory-mtvmvg1i-s0dkk5",
+      "type": "file",
+      "title": "差错控制概述.md",
+      "path": "D:\\obsidianrepository\\computerIntenet\\第三章数据链路层\\3.3差错控制\\差错控制概述.md",
+      "content": "",
+      "createdDate": "2026-09-10",
+      "checks": {
+        "2026-09-10": true,
+        "2026-09-11": true,
+        "2026-09-12": true,
+        "2026-09-14": true
+      }
+    }
+  ]
 }
